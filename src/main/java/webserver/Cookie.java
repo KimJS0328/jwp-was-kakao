@@ -7,11 +7,11 @@ import java.util.Map;
 public class Cookie {
     private final Map<String, String> attributes;
     private final String name;
-    private final Object value;
+    private final String value;
 
     public Cookie(String name, Object value) {
         this.name = name;
-        this.value = value;
+        this.value = value.toString();
         this.attributes = new HashMap<>();
     }
 
@@ -42,5 +42,9 @@ public class Cookie {
         builder.append(name).append("=").append(value);
         attributes.forEach((key, value) -> builder.append("; ").append(key).append("=").append(value));
         return builder.toString();
+    }
+
+    public String getValue() {
+        return value;
     }
 }
