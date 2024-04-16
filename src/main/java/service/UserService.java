@@ -1,10 +1,13 @@
 package service;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import db.DataBase;
 import model.User;
 import webserver.Cookie;
+import webserver.Session;
+import webserver.SessionManager;
 
 public class UserService {
     public static User addUser(User user) {
@@ -20,18 +23,26 @@ public class UserService {
         return DataBase.findAll();
     }
 
-    public static User authenticate(String userId, String password) {
+    public static Session authenticate(String userId, String password) {
         User user = getUser(userId);
         if (user == null || !user.getPassword().equals(password)) {
             return null;
         }
-        return user;
+        String sessionId = UUID.randomUUID().toString();
+        Session session = new Session(sessionId);
+        session.setAttribute("user", user);
+        SessionManager.addSession(session);
+        return session;
     }
 
-    public static User authorize(Cookie sessionId) {
-        if (sessionId == null) {
+    public static Session authorize(Cookie sessionId) {
+        if (authorized(sessionId)) {
             return null;
         }
-        return new User("tempId", "tempPassword", "tempName", "tempEmail");
+        return SessionManager.findSession(sessionId.getValue());
+    }
+
+    private static boolean authorized(Cookie sessionId) {
+        return sessionId == null || SessionManager.findSession(sessionId.getValue()) == null;
     }
 }
