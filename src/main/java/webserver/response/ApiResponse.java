@@ -18,7 +18,7 @@ public class ApiResponse implements Response {
     }
 
     public static ApiResponse of(String data) {
-        return new ApiResponse(data, Status.OK,null);
+        return new ApiResponse(data, Status.OK, null);
     }
 
     public static ApiResponse of(String data, String redirectUrl) {

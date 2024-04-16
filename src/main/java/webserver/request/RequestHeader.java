@@ -20,7 +20,6 @@ public class RequestHeader {
         this.cookies = createCookies(headerLines.subList(1, headerLines.size()));
     }
 
-
     private Map<String, String> createHeaders(List<String> headerLines) {
         return headerLines.stream()
             .map(this::splitKeyValue)
@@ -57,6 +56,7 @@ public class RequestHeader {
     public int getContentLength() {
         return Integer.parseInt(headers.getOrDefault("Content-Length", "0"));
     }
+
     public Cookie getCookie(String name) {
         return cookies.get(name);
     }

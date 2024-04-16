@@ -3,8 +3,6 @@ package webserver;
 import static org.assertj.core.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import webserver.response.HeaderBuilder;
 
@@ -45,7 +43,8 @@ public class HeaderBuilderTest {
             .build();
 
         // then
-        assertThat(header).isEqualTo("HTTP/1.1 200 OK\r\nContent-Type: text/html;charset=utf-8\r\nContent-Length: 10\r\n\r\n".getBytes());
+        assertThat(header).isEqualTo(
+            "HTTP/1.1 200 OK\r\nContent-Type: text/html;charset=utf-8\r\nContent-Length: 10\r\n\r\n".getBytes());
     }
 
     @Test
