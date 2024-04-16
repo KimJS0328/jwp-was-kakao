@@ -55,10 +55,10 @@ public class HeaderBuilderTest {
 
         // when
         byte[] header = headerBuilder
-            .setCookie("key", "value")
+            .setCookie(new Cookie("key", "value").addAttribute("Path", "/"))
             .build();
 
         // then
-        assertThat(header).isEqualTo("HTTP/1.1 200 OK\r\nSet-Cookie: key=value\r\n\r\n".getBytes());
+        assertThat(header).isEqualTo("HTTP/1.1 200 OK\r\nSet-Cookie: key=value; Path=/\r\n\r\n".getBytes());
     }
 }

@@ -42,6 +42,7 @@ public class WebApplicationServer {
             .register(Method.GET, "/", CommonController::handleHome)
             .register(Method.POST, "/user/create", UserController::handleUserCreate)
             .register(Method.POST, "/user/login", UserController::handleUserLogin)
+            .register(Method.GET, "/user/list.html", UserController::handleUserList)
             .registerDefault(CommonController::handleFile);
     }
 }

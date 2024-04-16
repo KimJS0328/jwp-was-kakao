@@ -5,12 +5,10 @@ import webserver.Cookie;
 public class HeaderBuilder {
     private final StringBuilder builder;
     private Status status;
-    private final Cookie cookie;
 
     public HeaderBuilder() {
         this.builder = new StringBuilder();
         this.status = Status.OK;
-        this.cookie = new Cookie();
     }
 
     public HeaderBuilder setStatus(int status) {
@@ -32,8 +30,11 @@ public class HeaderBuilder {
     }
 
     public HeaderBuilder setCookie(String key, String value) {
-        cookie.setCookie(key, value);
-        return this;
+        return setCookie(new Cookie(key, value));
+    }
+
+    public HeaderBuilder setCookie(Cookie cookie) {
+        return addHeader("Set-Cookie", cookie.toString());
     }
 
     public HeaderBuilder addContentType(String contentType) {
@@ -47,7 +48,6 @@ public class HeaderBuilder {
     public byte[] build() {
         return ("HTTP/1.1 " + status.getCode() + " " + status.getMessage() + "\r\n"
             + builder
-            + cookie
             + "\r\n").getBytes();
     }
 }

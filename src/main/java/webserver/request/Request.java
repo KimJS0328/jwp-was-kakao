@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 import utils.IOUtils;
+import webserver.Cookie;
 
 public class Request {
 
@@ -29,5 +30,9 @@ public class Request {
 
     public Map<String, String> getBody() {
         return requestBody.getKeyValues();
+    }
+
+    public Cookie getCookie(String name) {
+        return requestHeader.getCookie(name);
     }
 }

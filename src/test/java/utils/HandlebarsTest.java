@@ -1,5 +1,7 @@
 package utils;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,5 +28,22 @@ public class HandlebarsTest {
         User user = new User("javajigi", "password", "자바지기", "javajigi@gmail.com");
         String profilePage = template.apply(user);
         log.debug("ProfilePage : {}", profilePage);
+    }
+
+    @Test
+    void list() throws Exception {
+        TemplateLoader loader = new ClassPathTemplateLoader();
+        loader.setPrefix("/templates");
+        loader.setSuffix(".html");
+        Handlebars handlebars = new Handlebars(loader);
+
+        Template template = handlebars.compile("user/list");
+
+        List<User> users = List.of(
+            new User("javajigi", "password", "자바지기", "javajigi@gmail.com"),
+            new User("sanjigi", "password", "산지기", "sadf@asdf.com")
+        );
+        String listPage = template.apply(users);
+        log.debug("ProfilePage : {}", listPage);
     }
 }

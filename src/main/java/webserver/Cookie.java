@@ -1,45 +1,46 @@
 package webserver;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Cookie {
-    private final Map<String, String> cookies;
+    private final Map<String, String> attributes;
+    private final String name;
+    private final Object value;
 
-    public Cookie() {
-        this.cookies = new HashMap<>();
+    public Cookie(String name, Object value) {
+        this.name = name;
+        this.value = value;
+        this.attributes = new HashMap<>();
     }
 
-    public Cookie(String cookies) {
-        this();
-        String[] cookieArray = cookies.split(";");
-        for (String cookie : cookieArray) {
-            String[] keyValue = cookie.split("=");
-            this.cookies.put(keyValue[0].trim(), keyValue[1].trim());
-        }
+    public Cookie(String cookie) {
+        String[] tokens = cookie.split(";");
+        String[] nameValue = tokens[0].split("=");
+        this.name = nameValue[0];
+        this.value = nameValue[1];
+        this.attributes = new HashMap<>();
+        Arrays.stream(tokens)
+            .skip(1)
+            .map(part -> part.split("="))
+            .forEach(part -> attributes.put(part[0].trim(), part[1].trim()));
     }
 
-    public void setCookie(String key, String value) {
-        cookies.put(key, value);
+    public Cookie addAttribute(String key, String value) {
+        attributes.put(key, value);
+        return this;
     }
 
-    public String getCookie(String key) {
-        return cookies.get(key);
-    }
-
-    public void deleteCookie(String key) {
-        cookies.remove(key);
+    public String getName() {
+        return name;
     }
 
     @Override
     public String toString() {
-        if (cookies.isEmpty()) {
-            return "";
-        }
-        return "Set-Cookie: " + cookies.entrySet()
-            .stream()
-            .map(entry -> entry.getKey() + "=" + entry.getValue())
-            .reduce((cookie1, cookie2) -> cookie1 + "; " + cookie2)
-            .orElse("") + "\r\n";
+        StringBuilder builder = new StringBuilder();
+        builder.append(name).append("=").append(value);
+        attributes.forEach((key, value) -> builder.append("; ").append(key).append("=").append(value));
+        return builder.toString();
     }
 }

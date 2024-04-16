@@ -1,5 +1,7 @@
 package webserver.response;
 
+import webserver.Cookie;
+
 public class ApiResponse implements Response {
     private final String data;
     private final HeaderBuilder builder;
@@ -23,8 +25,8 @@ public class ApiResponse implements Response {
         return new ApiResponse(data, Status.FOUND, redirectUrl);
     }
 
-    public void setCookie(String key, String value) {
-        builder.setCookie(key, value);
+    public void setCookie(Cookie cookie) {
+        builder.setCookie(cookie);
     }
 
     @Override
