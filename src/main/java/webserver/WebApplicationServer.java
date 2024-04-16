@@ -41,6 +41,7 @@ public class WebApplicationServer {
         return new Dispatcher()
             .register(Method.GET, "/", CommonController::handleHome)
             .register(Method.POST, "/user/create", UserController::handleUserCreate)
+            .register(Method.POST, "/user/login", UserController::handleUserLogin)
             .registerDefault(CommonController::handleFile);
     }
 }

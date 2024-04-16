@@ -1,40 +1,35 @@
 package webserver.response;
 
 public class ApiResponse implements Response {
-    private String data;
-    private byte[] header;
+    private final String data;
+    private final HeaderBuilder builder;
 
-    private ApiResponse(String data, String redirectUrl) {
+    private ApiResponse(String data, Status status, String redirectUrl) {
         this.data = data;
-        this.header = redirectUrl == null ? createHeader() : createHeaderWithRedirectUrl(redirectUrl);
+        this.builder = new HeaderBuilder();
+        builder.setStatus(status)
+            .addHeader("Content-Type", "application/json;charset=utf-8")
+            .addContentLength(data.length());
+        if (redirectUrl != null) {
+            builder.addHeader("Location", redirectUrl);
+        }
     }
 
     public static ApiResponse of(String data) {
-        return new ApiResponse(data, null);
+        return new ApiResponse(data, Status.OK,null);
     }
 
     public static ApiResponse of(String data, String redirectUrl) {
-        return new ApiResponse(data, redirectUrl);
+        return new ApiResponse(data, Status.FOUND, redirectUrl);
     }
 
-    private byte[] createHeader() {
-        return ("HTTP/1.1 200 OK \r\n"
-            + "Content-Type: application/json;charset=utf-8\r\n"
-            + "Content-Length: " + data.length() + "\r\n"
-            + "\r\n").getBytes();
-    }
-
-    private byte[] createHeaderWithRedirectUrl(String redirectUrl) {
-        return ("HTTP/1.1 302 OK \r\n"
-            + "Content-Type: application/json;charset=utf-8\r\n"
-            + "Content-Length: " + data.length() + "\r\n"
-            + "Location: " + redirectUrl
-            + "\r\n").getBytes();
+    public void setCookie(String key, String value) {
+        builder.setCookie(key, value);
     }
 
     @Override
     public byte[] getHeader() {
-        return header;
+        return builder.build();
     }
 
     @Override

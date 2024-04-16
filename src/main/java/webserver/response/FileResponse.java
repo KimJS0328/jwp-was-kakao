@@ -23,10 +23,10 @@ public class FileResponse implements Response {
     private FileResponse(String path) throws IOException, URISyntaxException {
         String uri = FileIoUtils.convertPathToFilePath(path);
         this.body = FileIoUtils.loadFileFromClasspath(uri);
-        this.header = ("HTTP/1.1 200 OK \r\n"
-            + "Content-Type: " + getContentType(path) + ";charset=utf-8\r\n"
-            + "Content-Length: " + body.length + "\r\n"
-            + "\r\n").getBytes();
+        this.header = new HeaderBuilder()
+            .addContentType(getContentType(path) + ";charset=utf-8")
+            .addContentLength(body.length)
+            .build();
     }
 
     private String getContentType(String path) {
